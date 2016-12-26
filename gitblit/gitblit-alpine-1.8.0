@@ -1,0 +1,43 @@
+# AlpineLinux with a glibc-2.23, Oracle java 8 and gitblit 1.8
+FROM alpine-jdk8:112-b15
+
+MAINTAINER Bala Raman <srbala@gmail.com>
+# thanks to Anastas Dancha <anapsix@random.io>
+# thanks to Vladimir Krivosheev <develar@gmail.com> aka @develar for smaller image
+# and Victor Palma <palma.victor@gmail.com> aka @devx for pointing it out
+
+# Java Version and other ENV
+ENV JAVA_VERSION_MAJOR=8 \
+    JAVA_VERSION_MINOR=112 \
+    JAVA_VERSION_BUILD=15 \
+    JAVA_PACKAGE=jdk \
+    JAVA_JCE=unlimited \
+    JAVA_HOME=/opt/jdk \
+    PATH=${PATH}:/opt/jdk/bin \
+    GLIBC_VERSION=2.23-r3 \
+    LANG=C.UTF-8
+
+# do all in one step
+RUN apk upgrade --update && \
+    apk add --update curl bash git && \
+    curl -Lks http://dl.bintray.com/gitblit/releases/gitblit-1.8.0.tar.gz -o /tmp/gitblit.tar.gz && \
+    mkdir -p /tmp/gitblit-tmp && \
+    tar zxf /tmp/gitblit.tar.gz -C /tmp/gitblit-tmp && \
+    mv /tmp/gitblit-tmp/gitblit-1.8.0 /opt/gitblit && \
+    rm -rf /tmp/gitblit-tmp && \
+    rm -f /tmp/gitblit.tar.gz && \
+    mkdir -p /opt/gitblit-data && \
+    mv /opt/gitblit/data/* /opt/gitblit-data && \
+    echo "server.httpPort=7080" >> /opt/gitblit-data/gitblit.properties && \
+    echo "server.httpsPort=7443" >> /opt/gitblit-data/gitblit.properties && \
+    echo "server.redirectToHttpsPort=true" >> /opt/gitblit-data/gitblit.properties && \
+    echo "web.enableRpcManagement=true" >> /opt/gitblit-data/gitblit.properties && \
+    echo "web.enableRpcAdministration=true" >> /opt/gitblit-data/gitblit.properties && \
+    echo 'hosts: files mdns4_minimal [NOTFOUND=return] dns mdns4' >> /etc/nsswitch.conf && \
+    rm -rf /tmp/* /var/cache/apk/* 
+
+workdir /opt/gitblit
+expose 7080 7443 9418 29418
+cmd ["java", "-server", "-Xmx1024M", "-Djava.awt.headless=true", "-jar", "/opt/gitblit/gitblit.jar", "--baseFolder", "/opt/gitblit-data"]	
+
+# EOF
