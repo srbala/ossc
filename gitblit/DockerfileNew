@@ -1,0 +1,34 @@
+FROM java:jre
+LABEL MAINTAINER Bala Raman <srbala@gmail.com>
+
+WORKDIR /opt
+# Install necessary tools using apt-get
+# Install gitblit
+# Adjust the default Gitblit settings to bind to 80, 443, 9418, 29418, and allow RPC administration.
+
+RUN apt-get update && apt-get dist-upgrade -q -y \
+	&& apt-get install -q -y --no-install-recommends git-core sudo wget \
+  && rm -f /var/cache/apt/archives/*.deb /var/cache/apt/archives/partial/*.deb /var/cache/apt/*.bin || true \
+  && rm -rf /var/lib/apt/lists/* \  
+  && wget -O /tmp/gitblit.tar.gz http://dl.bintray.com/gitblit/releases/gitblit-1.8.0.tar.gz \
+	&& tar xzf /tmp/gitblit.tar.gz \
+	&& rm -f /tmp/gitblit.tar.gz \
+	&& ln -s gitblit-1.8.0 gitblit \
+	&& mv gitblit/data gitblit-data-initial \
+	&& mkdir gitblit-data \
+  && groupadd -r -g 500 gitblit \
+	&& useradd -r -d /opt/gitblit-data -u 500 -g 500 gitblit \
+	&& chown -Rf gitblit:gitblit /opt/gitblit-* \
+  && echo "server.httpPort=80" >> gitblit-data-initial/gitblit.properties \
+	&& echo "server.httpsPort=443" >> gitblit-data-initial/gitblit.properties \
+	&& echo "web.enableRpcManagement=true" >> gitblit-data-initial/gitblit.properties \
+	&& echo "web.enableRpcAdministration=true" >> gitblit-data-initial/gitblit.properties
+
+# Setup the Docker container environment and run Gitblit
+
+VOLUME /opt/gitblit-data
+EXPOSE 80 443 9418 29418
+
+WORKDIR /opt/gitblit
+COPY run.sh /run.sh
+CMD /run.sh
