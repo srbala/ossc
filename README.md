@@ -1,4 +1,4 @@
-# OSS Dockerfiles for containers
+# Open Source dockerfiles for containers
 
 Open Source dockerfiles for general use.
 
