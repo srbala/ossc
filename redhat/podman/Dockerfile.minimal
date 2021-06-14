@@ -10,8 +10,9 @@ LABEL maintainer="Red Hat, Inc." \
     io.k8s.display-name="Podman" \
     io.openshift.expose-services=""
 
-RUN microdnf -y module enable container-tools:rhel8; microdnf -y update; microdnf -y install shadow-utils util-linux; \
-    microdnf -y install podman fuse-overlayfs /etc/containers/storage.conf; rm -rf /var/cache /var/log/dnf* /var/log/yum.* ; \
+RUN microdnf -y module enable container-tools:rhel8; microdnf -y update; microdnf -y install shadow-utils util-linux podman fuse-overlayfs ; \
+    #    microdnf -y install podman fuse-overlayfs /etc/containers/storage.conf; 
+    rm -rf /var/cache /var/log/dnf* /var/log/yum.* ; \
     useradd build; \
     # Adjust storage.conf to enable Fuse storage.
     sed -i -e 's|^#mount_program|mount_program|g' -e '/additionalimage.*/a "/var/lib/shared",' /etc/containers/storage.conf \
