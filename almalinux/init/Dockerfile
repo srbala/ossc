@@ -3,9 +3,8 @@ FROM almalinux:8.4 as builder
 RUN mkdir /mnt/alma-root; \
     dnf install --installroot /mnt/alma-root  --releasever 8 --setopt install_weak_deps=false --nodocs -y coreutils-single \
     glibc-minimal-langpack \
-    json-glib \
-    langpacks-en \
-    microdnf \
+    dnf \
+    systemd \
     rootfiles; \
     rm -rf /mnt/alma-root/var/cache/* ; \
     dnf clean all; \
