@@ -5,6 +5,47 @@ RUN mkdir /mnt/alma-root; \
     glibc-minimal-langpack \
     dnf \
     systemd \
+    crypto-policies-scripts \
+    dbus-glib \
+    dmidecode \
+    dnf-plugin-subscription-manager \
+    findutils \
+    gdb-gdbserver \
+    gobject-introspection \
+    json-glib \
+    langpacks-en \
+    librhsm \
+    libuser \
+    passwd \
+    procps-ng \
+    python3-chardet \
+    python3-dateutil \
+    python3-dbus \
+    python3-decorator \
+    python3-dmidecode \
+    python3-dnf-plugins-core \
+    python3-ethtool \
+    python3-gobject-base \
+    python3-idna \
+    python3-iniparse \
+    python3-inotify \
+    python3-librepo \
+    python3-libxml2 \
+    python3-pysocks \
+    python3-requests \
+    python3-six \
+    python3-subscription-manager-rhsm \
+    python3-syspurpose \
+    python3-urllib3 \
+    redhat-release \
+    subscription-manager \
+    subscription-manager-rhsm-certificates \
+    tar \
+    usermode \
+    vim-minimal \
+    virt-what \
+    which \
+    yum \
     rootfiles; \
     rm -rf /mnt/alma-root/var/cache/* ; \
     dnf clean all; \
