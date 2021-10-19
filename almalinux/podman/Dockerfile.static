@@ -5,16 +5,21 @@
 FROM almalinux:8 as builder
 
 RUN dnf install -y epel-release && \
-#    dnf upgrade -y && \
+    #    dnf upgrade -y && \
     mkdir -p /mnt/system-root /mnt/system-root/build; \
     dnf --nogpgcheck --repoid=BaseOS --repoid=AppStream --enablerepo=powertools --enablerepo="epel" \
     --repofrompath='BaseOS,https://repo.almalinux.org/almalinux/8.5-beta/BaseOS/$basearch/kickstart/' \
     --repofrompath='AppStream,https://repo.almalinux.org/almalinux/8.5-beta/AppStream/$basearch/kickstart/' \
-#    --repofrompath='powertools,https://repo.almalinux.org/almalinux/8/PowerTools/$basearch/kickstart/' \
+    #    --repofrompath='powertools,https://repo.almalinux.org/almalinux/8/PowerTools/$basearch/kickstart/' \
     install --installroot /mnt/system-root  --releasever 8 --setopt=install_weak_deps=False --setopt=tsflags=nodocs -y \
     coreutils-single \
     iputils \
     shadow-utils \
+    podman \
+    buildah \
+    libslirp \
+    fuse-overlayfs \
+    containernetworking-plugins \
     util-linux ; \
     cp /etc/yum.repos.d/e* /mnt/system-root/etc/yum.repos.d/ ; \
     /bin/date +%Y%m%d_%H%M > /mnt/system-root/etc/BUILDTIME ;\
@@ -27,7 +32,7 @@ RUN dnf install -y epel-release && \
     touch /mnt/system-root/etc/machine-id; \
     rm -rf /var/cache/yum; 
 #
-COPY scripts/ /mnt/system-root/usr/bin
+# COPY scripts/ /mnt/system-root/usr/bin
 #
 # Create Final image from scratch for ks2rootfs
 FROM scratch
@@ -36,7 +41,6 @@ COPY --from=builder /mnt/system-root/ /
 
 WORKDIR /build
 
-STOPSIGNAL SIGRTMIN+3
 CMD ["/bin/bash"]
 
 #ENTRYPOINT ["/bin/bash"]
