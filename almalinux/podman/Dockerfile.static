@@ -31,9 +31,7 @@ RUN dnf install -y epel-release && \
     echo 'LANG="C.utf8"' > /mnt/system-root/etc/locale.conf; \
     touch /mnt/system-root/etc/machine-id; \
     rm -rf /var/cache/yum; 
-#
-# COPY scripts/ /mnt/system-root/usr/bin
-#
+
 # Create Final image from scratch for ks2rootfs
 FROM scratch
 
