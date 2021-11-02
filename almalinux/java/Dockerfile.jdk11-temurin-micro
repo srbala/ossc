@@ -1,0 +1,39 @@
+# Prepare custom Java runtime 
+FROM eclipse-temurin:11 as jre-build
+RUN $JAVA_HOME/bin/jlink \
+    --add-modules ALL-MODULE-PATH \
+    --strip-debug \
+    --no-man-pages \
+    --no-header-files \
+    --compress=2 \
+    --output /javaruntime
+
+#
+# Prepare micro base image with minimal necessary dependency
+# Add additional packages depends application need
+#
+# Choose one base image AlmaLinux, Rocky Linux or UBI
+FROM almalinux:8.4 AS sys-build
+# FROM rockylinux/rockylinux:8.4 AS sys-build
+# FROM redhat/ubi8:8.4 AS sys-build
+RUN mkdir -p /mnt/sys-root; \
+    dnf install --installroot /mnt/sys-root --releasever 8 --setopt install_weak_deps=false --nodocs -y \
+    coreutils-single \
+    glibc-minimal-langpack \
+#    tzdata openssl ca-certificates fontconfig \
+#    curl gzip tar \
+    zlib; \
+    dnf --installroot /mnt/sys-root clean all; \
+    rm -rf /mnt/sys-root/var/cache/* /mnt/sys-root/var/log/dnf* /mnt/sys-root/var/log/yum.*; \
+    mkdir /mnt/sys-root/etc/yum.repos.d; \
+    cp /etc/yum.repos.d/* /mnt/sys-root/etc/yum.repos.d/
+
+COPY --from=jre-build /javaruntime /mnt/sys-root/opt/java/openjdk
+
+FROM scratch
+ENV JAVA_HOME=/opt/java/openjdk \
+    PATH="/opt/java/openjdk/bin:${PATH}"
+
+COPY --from=sys-build /mnt/sys-root/ /
+
+CMD ["/bin/sh"]
