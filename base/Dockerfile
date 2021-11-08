@@ -18,6 +18,7 @@ RUN mkdir /mnt/alma-root; \
     # install only en_US.UTF-8 locale files, see
     # https://fedoraproject.org/wiki/Changes/Glibc_locale_subpackaging for details
     echo '%_install_langs en_US.UTF-8' > /mnt/alma-root/etc/rpm/macros.image-language-conf ;\
+    echo 'LANG="C.utf8"' > /mnt/alma-root/etc/locale.conf; \
     > /mnt/alma-root/etc/machine-id
 
 
