@@ -1,0 +1,9 @@
+FROM registry.centos.org/centos:latest
+LABEL MAINTAINER='Gerard Braad <me@gbraad.nl>'
+
+RUN dnf update -y && dnf install -y podman crun && \
+    rm -rf /var/cache /var/log/dnf* /var/log/yum.* && \
+    cp /usr/share/containers/containers.conf /etc/containers/containers.conf && \
+    sed -i '/^# cgroup_manager = "systemd"/ a cgroup_manager = "cgroupfs"' /etc/containers/containers.conf && \
+    #sed -i '/^# events_logger = "journald"/ a events_logger = "file"' /etc/containers/containers.conf && \
+    sed -i '/^driver = "overlay"/ c\driver = "vfs"' /etc/containers/storage.conf
