@@ -1,8 +1,8 @@
-FROM registry.access.redhat.com/ubi8/ubi:8.4
+FROM redhat/ubi8:8.5
 LABEL maintainer="Red Hat, Inc." \
       com.redhat.component="podman-container" \
       name="rhel8/podman" \
-      version="8.4"\
+      version="8.5"\
       License="ASL 2.0" \
 #labels for container catalog
       summary="Manage Pods, Containers and Container Images" \
