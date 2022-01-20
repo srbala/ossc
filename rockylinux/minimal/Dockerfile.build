@@ -1,9 +1,8 @@
-FROM rockylinux/rockylinux:8.4-rc1 as builder
+FROM rockylinux:8 as builder
 
 RUN mkdir /mnt/rocky-root; \
     dnf install --installroot /mnt/rocky-root  --releasever 8 --setopt install_weak_deps=false --nodocs -y coreutils-single \
     glibc-minimal-langpack \
-    libusbx \
     microdnf \
     rootfiles; \
     rm -rf /mnt/rocky-root/var/cache/* ; \
