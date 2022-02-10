@@ -1,8 +1,8 @@
-FROM registry.access.redhat.com/ubi8/ubi:8.3
+FROM redhat/ubi8:8.5
 LABEL maintainer="Red Hat, Inc." \
       com.redhat.component="skopeo-container" \
       name="rhel8/skopeo" \
-      version="8.3" \
+      version="8.5" \
       License="ASL 2.0" \
 #labels for container catalog
       summary="Inspect container images and repositories on registries" \

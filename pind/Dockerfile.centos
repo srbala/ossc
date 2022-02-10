@@ -1,5 +1,5 @@
 FROM registry.centos.org/centos:latest
-LABEL MAINTAINER='Gerard Braad <me@gbraad.nl>'
+LABEL MAINTAINER='Bala Raman <srbala@gmail.com>'
 
 RUN dnf update -y && dnf install -y podman crun && \
     rm -rf /var/cache /var/log/dnf* /var/log/yum.* && \

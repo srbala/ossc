@@ -1,4 +1,4 @@
-FROM registry.fedoraproject.org/fedora:latest
+FROM almalinux:8.5
 LABEL MAINTAINER='Bala Raman <srbala@gmail.com>'
 
 RUN dnf update -y && dnf install -y podman && \
