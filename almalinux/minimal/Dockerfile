@@ -1,4 +1,4 @@
-FROM almalinux:8.4 as builder
+FROM almalinux:8 as builder
 
 RUN mkdir /mnt/alma-root; \
     dnf install --installroot /mnt/alma-root  --releasever 8 --setopt install_weak_deps=false --nodocs -y coreutils-single \
